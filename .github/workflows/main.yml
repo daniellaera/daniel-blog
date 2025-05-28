@@ -41,8 +41,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            daniellaera/zola-blog:latest
-            daniellaera/zola-blog:${{ github.sha }}
+            daniellaera/daniel-blog:latest
+            daniellaera/daniel-blog:${{ github.sha }}
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.2.0
@@ -51,8 +51,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/zola-blog
-            docker pull daniellaera/zola-blog:latest
+            cd ~/daniel-blog
+            docker pull daniellaera/daniel-blog:latest
             docker compose down || true
             docker compose up -d
             docker image prune -f
