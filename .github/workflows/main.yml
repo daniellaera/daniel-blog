@@ -1,4 +1,4 @@
-name: Eleventy CI/CD
+name: Zola CI/CD
 
 on:
   push:
@@ -14,6 +14,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Install Zola CLI
+        run: |
+          curl -sSL https://github.com/getzola/zola/releases/download/v0.19.1/zola-v0.19.1-x86_64-unknown-linux-gnu.tar.gz \
+          | tar -xz
+          sudo mv zola /usr/local/bin/zola
+
+      - name: Build Zola site
+        run: zola build
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -32,8 +41,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            daniellaera/daniel-blog:latest
-            daniellaera/daniel-blog:${{ github.sha }}
+            daniellaera/zola-blog:latest
+            daniellaera/zola-blog:${{ github.sha }}
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.2.0
@@ -42,8 +51,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/daniel-blog
-            docker pull daniellaera/eleventy-blog:latest
+            cd ~/zola-blog
+            docker pull daniellaera/zola-blog:latest
             docker compose down || true
             docker compose up -d
             docker image prune -f

@@ -1,10 +1,10 @@
-# Just serve already-built site
+# Stage: Serve pre-built Zola site
 FROM nginx:alpine
 
-# Clean default html dir
+# Clean default nginx static folder
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy pre-built site
+# Copy pre-built Zola site (from CI build step)
 COPY public /usr/share/nginx/html
 
 EXPOSE 80
